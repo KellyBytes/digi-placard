@@ -221,7 +221,7 @@ function App() {
       {/* Cancel Button */}
       {showCancel && (
         <button
-          className="absolute top-8 right-8 z-10 bg-gray-700 text-white px-4 py-2 rounded-lg"
+          className="absolute top-12 right-8 z-10 bg-gray-700 text-white px-4 py-2 rounded-lg"
           onClick={e => {
             e.stopPropagation();
             setMode('input');
