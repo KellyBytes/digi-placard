@@ -39,6 +39,8 @@ export default defineConfig({
         ],
       },
       workbox: {
+        skipWaiting: true, // 新しいSWを即座にアクティブ化
+        clientClaim: true, // 即座に全クライアントを制御化に置く
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         // ↑ これらのファイルを全部キャッシュしてオフライン対応
       },
