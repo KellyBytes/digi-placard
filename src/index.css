@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@100..900&family=M+PLUS+1p&family=M+PLUS+Rounded+1c&family=Manrope:wght@200..800&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-mp1: "M PLUS 1", sans-serif;
+
+  --animate-breathe: breathe 6s ease-in-out infinite;
+
+  @keyframes breathe {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
