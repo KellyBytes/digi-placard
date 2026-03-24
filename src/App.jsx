@@ -127,7 +127,7 @@ function App() {
   // 文字列入力画面
   if (mode === 'input') {
     return (
-      <div className="w-full min-h-dvh overflow-y-auto flex flex-col justify-center items-center px-6 space-y-4 text-lg sm:text-2xl">
+      <div className="w-full min-h-dvh overflow-y-auto flex flex-col justify-center items-center px-6 space-y-4 text-lg sm:text-2xl bg-white">
         <textarea
           className="border border-gray-400 p-4 w-full max-w-xl rounded-lg resize-none"
           placeholder="文字列を入力してください"
@@ -188,7 +188,8 @@ function App() {
             文字列表示中にこの画面に戻るには、画面をタップして右上に表示されるCANCELボタンをタップしてください
           </span>
           <span className="block text-base text-gray-500">
-            ● 全画面表示にするには、ホーム画面にアイコンを追加してください
+            ●
+            スマホ・タブレットで全画面表示にするには、ホーム画面にアイコンを追加してください
           </span>
         </div>
 
@@ -220,7 +221,7 @@ function App() {
       {/* Cancel Button */}
       {showCancel && (
         <button
-          className="absolute top-4 right-4 z-10 bg-gray-700 text-white px-4 py-2 rounded-lg"
+          className="absolute top-8 right-8 z-10 bg-gray-700 text-white px-4 py-2 rounded-lg"
           onClick={e => {
             e.stopPropagation();
             setMode('input');
