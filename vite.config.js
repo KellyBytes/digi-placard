@@ -15,8 +15,8 @@ export default defineConfig({
         name: 'Digi-Placard',
         short_name: 'Digi-Placard',
         description: 'デジタルプラカード',
-        theme_color: '#3b82f6', // blue-500 に合わせた
-        background_color: '#ffffff',
+        theme_color: '#000000', // blue-500 に合わせた
+        background_color: '#000000',
         display: 'fullscreen', // スマホで全画面表示（プラカード用途に最適）
         orientation: 'any',
         icons: [
