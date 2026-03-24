@@ -187,6 +187,9 @@ function App() {
             ●
             文字列表示中にこの画面に戻るには、画面をタップして右上に表示されるCANCELボタンをタップしてください
           </span>
+          <span className="block text-base text-gray-500">
+            ● 全画面表示にするには、ホーム画面にアイコンを追加してください
+          </span>
         </div>
 
         <div className="w-full max-w-xl text-right text-sm text-gray-500 mt-4">
@@ -208,6 +211,10 @@ function App() {
   return (
     <div
       className={`w-full h-dvh flex items-center justify-center overflow-hidden font-mp1 ${BG_COLORS[bgColor]} ${TEXT_COLORS[textColor]}`}
+      style={{
+        paddingTop: 'env(safe-area-inset-top',
+        paddingBottom: 'env(safe-area-inset-bottom',
+      }}
       onClick={() => setShowCancel(true)}
     >
       {/* Cancel Button */}
