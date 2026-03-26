@@ -234,7 +234,7 @@ function App() {
     >
       {/* Cancel Button */}
       {showButtons && (
-        <div className="absolute top-12 right-8 z-10 w-44 flex flex-col items-center gap-2 font-bold">
+        <div className="absolute top-18 right-8 z-10 w-46 flex flex-col items-center gap-2 font-bold">
           <button
             className="w-full h-10 bg-gray-300 hover:bg-gray-200 text-black px-4 py-2 rounded-lg"
             onClick={e => {
@@ -257,7 +257,7 @@ function App() {
             >
               <i class="fa-solid fa-minus"></i>
             </button>
-            <span>FONT SIZE</span>
+            <span className="text-nowrap">FONT SIZE</span>
             <button
               className="w-8 h-8 mr-2 rounded-full hover:bg-gray-200"
               onClick={e => {
