@@ -40,9 +40,9 @@ function App() {
 
     for (const char of text) {
       if (char.match(/[^\x00-\x7F]/)) {
-        length += 3;
-      } else {
         length += 2;
+      } else {
+        length += 1;
       }
     }
 
@@ -57,12 +57,13 @@ function App() {
   const getFontSize = text => {
     const maxLen = getMaxLineLength(text);
 
-    if (maxLen <= 10) return 'text-[32vmin]';
-    if (maxLen <= 16) return 'text-[28vmin]';
-    if (maxLen <= 20) return 'text-[22vmin]';
-    if (maxLen <= 32) return 'text-[14vmin]';
-    if (maxLen <= 40) return 'text-[11vmin]';
-    return 'text-[9vmin]';
+    if (maxLen <= 5) return 'text-[32vmin]';
+    if (maxLen <= 10) return 'text-[22vmin]';
+    if (maxLen <= 16) return 'text-[16vmin]';
+    if (maxLen <= 20) return 'text-[12vmin]';
+    if (maxLen <= 32) return 'text-[8vmin]';
+    if (maxLen <= 40) return 'text-[6vmin]';
+    return 'text-[5vmin]';
   };
 
   useEffect(() => {
@@ -211,7 +212,7 @@ function App() {
   // 文字列表示画面
   return (
     <div
-      className={`w-full h-dvh flex items-center justify-center overflow-hidden font-mp1 ${BG_COLORS[bgColor]} ${TEXT_COLORS[textColor]}`}
+      className={`w-full h-dvh flex items-center justify-center overflow-hidden font-protest ${BG_COLORS[bgColor]} ${TEXT_COLORS[textColor]}`}
       style={{
         paddingTop: 'env(safe-area-inset-top',
         paddingBottom: 'env(safe-area-inset-bottom',
@@ -241,7 +242,7 @@ function App() {
         </span>
 
         <span
-          className={`w-full h-full flex justify-center items-center text-center wrap-break-word whitespace-pre-wrap font-black leading-none px-4 pb-4 ${getFontSize(text)} transition-opacity duration-600 ${phase === 'blink' ? (visible ? 'opacity-100 animate-breathe' : 'opacity-0') : 'opacity-0'}`}
+          className={`w-full h-full flex justify-center items-center text-center wrap-break-word whitespace-pre-wrap font-black leading-[1.05] px-4 pb-4 ${getFontSize(text)} transition-opacity duration-600 ${phase === 'blink' ? (visible ? 'opacity-100 animate-breathe' : 'opacity-0') : 'opacity-0'}`}
         >
           {text}
         </span>

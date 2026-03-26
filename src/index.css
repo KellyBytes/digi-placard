@@ -1,8 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@100..900&family=M+PLUS+1p&family=M+PLUS+Rounded+1c&family=Manrope:wght@200..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=M+PLUS+1:wght@100..900&family=Protest+Strike&display=swap");
+
 @import "tailwindcss";
 
 @theme {
-  --font-mp1: "M PLUS 1", sans-serif;
+  --font-protest: "Anton", "M PLUS 1", system-ui, sans-serif;
 
   --animate-breathe: breathe 6s ease-in-out infinite;
 
