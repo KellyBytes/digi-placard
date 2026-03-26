@@ -7,6 +7,7 @@ const TEXT_COLORS = {
   green: 'text-green-400',
   black: 'text-black',
   white: 'text-white',
+  rainbow: '',
 };
 
 const BG_COLORS = {
@@ -19,18 +20,19 @@ function App() {
   const [text, setText] = useState('');
   const [textColor, setTextColor] = useState('red');
   const [bgColor, setBgColor] = useState('white');
+  const [fontSizeOffset, setFontSizeOffset] = useState(0);
 
   const [mode, setMode] = useState('input'); // input | play
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState('typing'); // typing | pause | blink | pause2
   const [blinkStep, setBlinkStep] = useState(0);
   const [visible, setVisible] = useState(true);
-  const [showCancel, setShowCancel] = useState(false);
+  const [showButtons, setShowButtons] = useState(false);
 
   const handleInput = e => {
     let value = e.target.value;
     let lines = value.split('\n');
-    lines = lines.slice(0, 3);
+    lines = lines.slice(0, 4);
     lines = lines.map(line => line.slice(0, 20));
     setText(lines.join('\n'));
   };
@@ -57,14 +59,22 @@ function App() {
   const getFontSize = text => {
     const maxLen = getMaxLineLength(text);
 
-    if (maxLen <= 5) return 'text-[32vmin]';
-    if (maxLen <= 10) return 'text-[22vmin]';
-    if (maxLen <= 16) return 'text-[16vmin]';
-    if (maxLen <= 20) return 'text-[12vmin]';
-    if (maxLen <= 32) return 'text-[8vmin]';
-    if (maxLen <= 40) return 'text-[6vmin]';
-    return 'text-[5vmin]';
+    if (maxLen <= 5) return 32;
+    if (maxLen <= 10) return 22;
+    if (maxLen <= 16) return 16;
+    if (maxLen <= 20) return 12;
+    if (maxLen <= 32) return 8;
+    if (maxLen <= 40) return 6;
+    return 5;
   };
+
+  const getRainbowStyle = () => ({
+    backgroundImage:
+      'linear-gradient(90deg, #ff0000, #ff7700, #ffff00, #00cc00, #0000ff, #8b00ff)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+  });
 
   useEffect(() => {
     if (mode !== 'play') return; // play中のみ先へ進む
@@ -132,7 +142,7 @@ function App() {
         <textarea
           className="border border-gray-400 p-4 w-full max-w-xl rounded-lg resize-none"
           placeholder="文字列を入力してください"
-          rows={3}
+          rows={4}
           value={text}
           onChange={handleInput}
         />
@@ -143,7 +153,7 @@ function App() {
             <select
               value={textColor}
               onChange={e => setTextColor(e.target.value)}
-              className="w-30 ml-2 px-2 py-1 bg-gray-100 rounded-lg"
+              className="w-36 ml-2 px-2 py-1 bg-gray-100 rounded-lg"
             >
               {Object.keys(TEXT_COLORS).map(color => (
                 <option key={color}>{color}</option>
@@ -156,7 +166,7 @@ function App() {
             <select
               value={bgColor}
               onChange={e => setBgColor(e.target.value)}
-              className="w-30 ml-2 px-2 py-1 bg-gray-100 rounded-lg"
+              className="w-36 ml-2 px-2 py-1 bg-gray-100 rounded-lg"
             >
               {Object.keys(BG_COLORS).map(color => (
                 <option key={color}>{color}</option>
@@ -179,7 +189,7 @@ function App() {
 
         <div className="w-full max-w-xl flex flex-col justify-center items-start px-6">
           <span className="block text-base text-gray-500">
-            ● 文字列は1行20文字、3行まで入力できます
+            ● 文字列は1行20文字、4行まで入力できます
           </span>
           <span className="block text-base text-gray-500">
             ● 文字色、背景色を選んでSTARTを押してください
@@ -187,6 +197,9 @@ function App() {
           <span className="block text-base text-gray-500">
             ●
             文字列表示中にこの画面に戻るには、画面をタップして右上に表示されるCANCELボタンをタップしてください
+          </span>
+          <span className="block text-base text-gray-500">
+            ● 全文表示のフォントサイズは+/-ボタンで調整できます
           </span>
           <span className="block text-base text-gray-500">
             ●
@@ -212,37 +225,67 @@ function App() {
   // 文字列表示画面
   return (
     <div
-      className={`w-full h-dvh flex items-center justify-center overflow-hidden font-protest ${BG_COLORS[bgColor]} ${TEXT_COLORS[textColor]}`}
+      className={`w-full h-dvh flex items-center justify-center overflow-hidden ${BG_COLORS[bgColor]} ${textColor !== 'rainbow' ? TEXT_COLORS[textColor] : ''}`}
       style={{
         paddingTop: 'env(safe-area-inset-top',
         paddingBottom: 'env(safe-area-inset-bottom',
       }}
-      onClick={() => setShowCancel(true)}
+      onClick={() => setShowButtons(prev => !prev)}
     >
       {/* Cancel Button */}
-      {showCancel && (
-        <button
-          className="absolute top-12 right-8 z-10 bg-gray-700 text-white px-4 py-2 rounded-lg"
-          onClick={e => {
-            e.stopPropagation();
-            setMode('input');
-            setShowCancel(false);
-          }}
-        >
-          CANCEL
-        </button>
+      {showButtons && (
+        <div className="absolute top-12 right-8 z-10 w-44 flex flex-col items-center gap-2 font-bold">
+          <button
+            className="w-full h-10 bg-gray-300 hover:bg-gray-200 text-black px-4 py-2 rounded-lg"
+            onClick={e => {
+              e.stopPropagation();
+              setMode('input');
+              setShowButtons(false);
+              setFontSizeOffset(0);
+            }}
+          >
+            CANCEL
+          </button>
+
+          <div className="w-full h-10  flex justify-between items-center gap-2 bg-gray-300 text-black rounded-lg">
+            <button
+              className="w-8 h-8 ml-2 rounded-full hover:bg-gray-200"
+              onClick={e => {
+                e.stopPropagation();
+                setFontSizeOffset(prev => prev - 1);
+              }}
+            >
+              <i class="fa-solid fa-minus"></i>
+            </button>
+            <span>FONT SIZE</span>
+            <button
+              className="w-8 h-8 mr-2 rounded-full hover:bg-gray-200"
+              onClick={e => {
+                e.stopPropagation();
+                setFontSizeOffset(prev => prev + 1);
+              }}
+            >
+              <i class="fa-solid fa-plus"></i>
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Display */}
-      <div className="w-full h-full flex justify-center items-center overflow-hidden relative">
+      <div className="w-full h-full flex justify-center items-center overflow-hidden relative font-protest">
         <span
           className={`absolute text-[min(80vmin,90vw)] leading-none font-extrabold transition-opacity duration-300 ${phase === 'typing' ? 'opacity-100' : 'opacity-0'}`}
+          style={textColor === 'rainbow' ? getRainbowStyle() : {}}
         >
           {text.slice(index, index + 1)}
         </span>
 
         <span
-          className={`w-full h-full flex justify-center items-center text-center wrap-break-word whitespace-pre-wrap font-black leading-[1.05] px-4 pb-4 ${getFontSize(text)} transition-opacity duration-600 ${phase === 'blink' ? (visible ? 'opacity-100 animate-breathe' : 'opacity-0') : 'opacity-0'}`}
+          className={`w-full h-full flex justify-center items-center text-center wrap-break-word whitespace-pre-wrap font-black leading-[1.05] px-4 pb-4 transition-opacity duration-600 ${phase === 'blink' ? (visible ? 'opacity-100 animate-breathe' : 'opacity-0') : 'opacity-0'}`}
+          style={{
+            fontSize: `${getFontSize(text) + fontSizeOffset}vmin`,
+            ...(textColor === 'rainbow' ? getRainbowStyle() : {}),
+          }}
         >
           {text}
         </span>
