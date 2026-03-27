@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 const TEXT_COLORS = {
-  red: 'text-red-600/90',
-  blue: 'text-blue-600/90',
+  red: 'text-red-600',
+  blue: 'text-blue-500',
   yellow: 'text-yellow-300',
   green: 'text-green-400',
   black: 'text-black',
@@ -13,7 +13,10 @@ const TEXT_COLORS = {
 const BG_COLORS = {
   white: 'bg-white',
   black: 'bg-black',
+  red: 'bg-red-500',
+  blue: 'bg-blue-500',
   yellow: 'bg-yellow-300',
+  green: 'bg-green-400',
 };
 
 function App() {
@@ -28,6 +31,8 @@ function App() {
   const [blinkStep, setBlinkStep] = useState(0);
   const [visible, setVisible] = useState(true);
   const [showButtons, setShowButtons] = useState(false);
+
+  const chars = useMemo(() => [...text], [text]);
 
   const handleInput = e => {
     let value = e.target.value;
@@ -83,7 +88,8 @@ function App() {
 
     switch (phase) {
       case 'typing': // 1文字ずつ表示
-        if (index < text.length) {
+        // if (index < text.length) {
+        if (index < chars.length) {
           timer = setTimeout(() => {
             setIndex(prev => prev + 1);
           }, 250);
@@ -277,7 +283,8 @@ function App() {
           className={`absolute text-[min(80vmin,90vw)] leading-none font-extrabold transition-opacity duration-300 ${phase === 'typing' ? 'opacity-100' : 'opacity-0'}`}
           style={textColor === 'rainbow' ? getRainbowStyle() : {}}
         >
-          {text.slice(index, index + 1)}
+          {/* {text.slice(index, index + 1)} */}
+          {chars[index]}
         </span>
 
         <span
