@@ -1,11 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Anton&family=M+PLUS+1:wght@100..900&family=Protest+Strike&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=M+PLUS+1:wght@100..900&family=Protest+Strike&display=swap');
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --font-protest: "Anton", "M PLUS 1", system-ui, sans-serif;
+  --font-protest: 'Anton', 'M PLUS 1', system-ui, sans-serif;
 
-  --animate-breathe: breathe 6s ease-in-out infinite;
+  --animate-breathe: breathe 8s ease-in-out infinite;
+  --animate-marquee: marquee 8s linear forwards;
 
   @keyframes breathe {
     0%,
@@ -14,6 +15,15 @@
     }
     50% {
       transform: scale(1.05);
+    }
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(100vw);
+    }
+    to {
+      transform: translateX(-100%);
     }
   }
 }
