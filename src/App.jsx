@@ -37,7 +37,7 @@ function App() {
   const [scrollSpeed, setScrollSpeed] = useState(() => {
     const saved = localStorage.getItem('scrollSpeed');
     const parsed = Number(saved);
-    return Number.isFinite(parsed) ? parsed : 600;
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 800;
   });
   const [showButtons, setShowButtons] = useState(false);
 
@@ -160,11 +160,14 @@ function App() {
     const totalDistance = window.innerWidth + textWidth;
     const speed = scrollSpeed; // px/sec
     const duration = totalDistance / speed;
+
     setScrollDuration(duration);
-  }, [mode, displayMode, scrollKey, scrollSpeed]);
+    setScrollKey(prev => prev + 1);
+  }, [mode, displayMode, scrollSpeed]);
 
   useEffect(() => {
     if (mode !== 'play' || displayMode !== 'scroll') return;
+    // if (scrollDuration === 0) return;
 
     let timer;
 
@@ -354,7 +357,7 @@ function App() {
               <div
                 key={scrollKey}
                 ref={scrollTextRef}
-                className="inline-block whitespace-nowrap text-[min(65vmin,70vw)] font-extrabold"
+                className="inline-block whitespace-nowrap text-[min(65vmin,70vw)] font-extrabold animate-marquee"
                 style={{
                   animation: `marquee ${scrollDuration}s linear forwards`,
                   ...(textColor === 'rainbow' ? getRainbowStyle() : {}),
