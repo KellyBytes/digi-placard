@@ -1,9 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=M+PLUS+1:wght@100..900&family=Protest+Strike&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=M+PLUS+1:wght@100..900&family=Merriweather:wght@300..900&family=Protest+Strike&family=Roboto:wght@100..900&display=swap');
 
 @import 'tailwindcss';
 
 @theme {
   --font-protest: 'Anton', 'M PLUS 1', system-ui, sans-serif;
+  --font-roboto: 'Roboto', 'M PLUS 1', system-ui, sans-serif;
+  --font-merriweather: 'Merriweather', 'M PLUS 1', serif;
 
   --animate-breathe: breathe 8s ease-in-out infinite;
   --animate-marquee: marquee 8s linear forwards;
