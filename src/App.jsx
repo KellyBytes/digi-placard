@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import InputScreen from './components/InputScreen';
+import { LANGS, EN_FONTS, EN_WEIGHTS } from './i18n';
 
 const TEXT_COLORS = {
   red: 'text-red-600',
@@ -20,7 +21,19 @@ const BG_COLORS = {
   green: 'bg-green-400',
 };
 
+const loadSetting = (key, allowed, fallback) => {
+  const saved = localStorage.getItem(key);
+  return allowed.includes(saved) ? saved : fallback;
+};
+
 function App() {
+  const [lang, setLang] = useState(() => loadSetting('lang', LANGS, 'en'));
+  const [enFont, setEnFont] = useState(() =>
+    loadSetting('enFont', Object.keys(EN_FONTS), 'sans'),
+  );
+  const [enWeight, setEnWeight] = useState(() =>
+    loadSetting('enWeight', Object.keys(EN_WEIGHTS), 'default'),
+  );
   const [text, setText] = useState('');
   const [textColor, setTextColor] = useState('red');
   const [bgColor, setBgColor] = useState('white');
@@ -225,6 +238,24 @@ function App() {
     }
   }, [scrollSpeed]);
 
+  useEffect(() => {
+    localStorage.setItem('lang', lang);
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  useEffect(() => {
+    localStorage.setItem('enFont', enFont);
+  }, [enFont]);
+
+  useEffect(() => {
+    localStorage.setItem('enWeight', enWeight);
+  }, [enWeight]);
+
+  // 英語モードではフォントとウェイトを選択可能、日本語モードは従来通り
+  const isEn = lang === 'en';
+  const fontClass = isEn ? EN_FONTS[enFont] : 'font-protest';
+  const weightStyle = isEn ? { fontWeight: EN_WEIGHTS[enWeight] } : {};
+
   // 文字列入力画面
   if (mode === 'input') {
     return (
@@ -234,6 +265,9 @@ function App() {
           textColor,
           bgColor,
           displayMode,
+          lang,
+          enFont,
+          enWeight,
         }}
         actions={{
           handleInput,
@@ -245,6 +279,9 @@ function App() {
           setPhase,
           setScrollKey,
           setText,
+          setLang,
+          setEnFont,
+          setEnWeight,
         }}
         constants={{ TEXT_COLORS, BG_COLORS }}
       />
@@ -323,13 +360,16 @@ function App() {
       )}
 
       {/* Display */}
-      <div className="w-full h-full flex justify-center items-center overflow-hidden relative font-protest">
+      <div className={`w-full h-full flex justify-center items-center overflow-hidden relative ${fontClass}`}>
         {/* 1文字ずつ表示 */}
         {displayMode === 'typing' && (
           <>
             <span
               className={`absolute text-[min(80vmin,90vw)] leading-none font-extrabold transition-opacity duration-300 ${phase === 'typing' ? 'opacity-100' : 'opacity-0'}`}
-              style={textColor === 'rainbow' ? getRainbowStyle() : {}}
+              style={{
+                ...weightStyle,
+                ...(textColor === 'rainbow' ? getRainbowStyle() : {}),
+              }}
             >
               {/* {text.slice(index, index + 1)} */}
               {chars[index]}
@@ -340,6 +380,7 @@ function App() {
               className={`w-full h-full flex justify-center items-center text-center wrap-break-word whitespace-pre-wrap font-black leading-[1.05] px-4 pb-4 transition-opacity duration-600 ${phase === 'blink' ? (visible ? 'opacity-100 animate-breathe' : 'opacity-0') : 'opacity-0'}`}
               style={{
                 fontSize: `${getFontSize(text) + fontSizeOffset}vmin`,
+                ...weightStyle,
                 ...(textColor === 'rainbow' ? getRainbowStyle() : {}),
               }}
             >
@@ -360,6 +401,7 @@ function App() {
                 className="inline-block whitespace-nowrap text-[min(65vmin,70vw)] font-extrabold animate-marquee"
                 style={{
                   animation: `marquee ${scrollDuration}s linear forwards`,
+                  ...weightStyle,
                   ...(textColor === 'rainbow' ? getRainbowStyle() : {}),
                 }}
               >
@@ -372,6 +414,7 @@ function App() {
               className={`absolute w-full h-full flex justify-center items-center text-center wrap-break-word whitespace-pre-wrap font-black leading-[1.05] px-4 pb-4 transition-opacity duration-600 ${phase === 'blink' ? (visible ? 'opacity-100 animate-breathe' : 'opacity-0') : 'opacity-0'}`}
               style={{
                 fontSize: `${getFontSize(text) + fontSizeOffset}vmin`,
+                ...weightStyle,
                 ...(textColor === 'rainbow' ? getRainbowStyle() : {}),
               }}
             >

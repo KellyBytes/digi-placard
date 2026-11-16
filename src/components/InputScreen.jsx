@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import NotesModal from './NotesModal';
+import { translations } from '../i18n';
 
 const InputScreen = props => {
   const { states, actions, constants } = props;
+  const t = translations[states.lang];
+  const isEn = states.lang === 'en';
 
   const [notes, setNotes] = useState(() => {
     const saved = localStorage.getItem('placard-notes');
@@ -25,9 +28,9 @@ const InputScreen = props => {
     });
 
     if (notes.includes(states.text)) {
-      alert('すでに保存されています');
+      alert(t.alreadySaved);
     } else {
-      alert('保存しました');
+      alert(t.saved);
     }
   };
 
@@ -41,25 +44,43 @@ const InputScreen = props => {
 
   return (
     <>
-      <div className="w-full min-h-dvh overflow-y-auto flex flex-col justify-center items-center px-6 space-y-4 text-lg sm:text-2xl bg-white">
+      <div className="relative w-full min-h-dvh overflow-y-auto flex flex-col justify-center items-center px-6 pt-16 pb-6 space-y-4 text-lg sm:text-2xl bg-white">
+        {/* Language toggle */}
+        <div
+          className="absolute top-4 right-4 flex items-center text-base font-bold border border-gray-400 rounded-lg overflow-hidden"
+          role="group"
+          aria-label="Language"
+        >
+          {['en', 'ja'].map((code, i) => (
+            <button
+              key={code}
+              className={`px-3 py-1 cursor-pointer ${i > 0 ? 'border-l border-gray-400' : ''} ${states.lang === code ? 'bg-slate-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+              aria-pressed={states.lang === code}
+              onClick={() => actions.setLang(code)}
+            >
+              {code.toUpperCase()}
+            </button>
+          ))}
+        </div>
+
         <div className="w-full max-w-xl flex justify-end gap-2 text-lg">
           <button
             className="bg-slate-400 text-white px-4 py-2 rounded-lg cursor-pointer"
             onClick={saveNote}
           >
-            <i className="fa-regular fa-floppy-disk"></i> 保存
+            <i className="fa-regular fa-floppy-disk"></i> {t.save}
           </button>
           <button
             className="bg-slate-500 text-white px-4 py-2 rounded-lg cursor-pointer"
             onClick={() => setShowNotes(true)}
           >
-            <i className="fa-regular fa-file-lines"></i> メモ
+            <i className="fa-regular fa-file-lines"></i> {t.notes}
           </button>
         </div>
 
         <textarea
           className="bg-gray-50 border border-gray-400 p-4 w-full max-w-xl rounded-lg resize-none"
-          placeholder="文字列を入力してください"
+          placeholder={t.placeholder}
           rows={4}
           value={states.text}
           onChange={actions.handleInput}
@@ -67,7 +88,7 @@ const InputScreen = props => {
 
         <div className="w-full max-w-xl flex justify-around">
           <div>
-            <label className="font-bold">文字色: </label>
+            <label className="font-bold">{t.textColor}: </label>
             <select
               value={states.textColor}
               onChange={e => actions.setTextColor(e.target.value)}
@@ -80,7 +101,7 @@ const InputScreen = props => {
           </div>
 
           <div>
-            <label className="font-bold">背景色: </label>
+            <label className="font-bold">{t.bgColor}: </label>
             <select
               value={states.bgColor}
               onChange={e => actions.setBgColor(e.target.value)}
@@ -94,7 +115,7 @@ const InputScreen = props => {
         </div>
 
         <div className="w-full max-w-xl flex justify-around items-start gap-2">
-          <label className="font-bold">表示方法: </label>
+          <label className="font-bold">{t.displayMode}: </label>
           <label className="flex items-center gap-2">
             <input
               type="radio"
@@ -103,7 +124,7 @@ const InputScreen = props => {
               checked={states.displayMode === 'scroll'}
               onChange={() => actions.setDisplayMode('scroll')}
             />
-            横スクロール
+            {t.scroll}
           </label>
           <label className="flex items-center gap-2">
             <input
@@ -113,9 +134,61 @@ const InputScreen = props => {
               checked={states.displayMode === 'typing'}
               onChange={() => actions.setDisplayMode('typing')}
             />
-            1文字ずつ表示
+            {t.typing}
           </label>
         </div>
+
+        {isEn && (
+          <>
+            <div className="w-full max-w-xl flex justify-around items-start gap-2">
+              <label className="font-bold">{t.font}: </label>
+              <label className="flex items-center gap-2 font-roboto">
+                <input
+                  type="radio"
+                  name="enFont"
+                  value="sans"
+                  checked={states.enFont === 'sans'}
+                  onChange={() => actions.setEnFont('sans')}
+                />
+                {t.fontSans}
+              </label>
+              <label className="flex items-center gap-2 font-merriweather">
+                <input
+                  type="radio"
+                  name="enFont"
+                  value="serif"
+                  checked={states.enFont === 'serif'}
+                  onChange={() => actions.setEnFont('serif')}
+                />
+                {t.fontSerif}
+              </label>
+            </div>
+
+            <div className="w-full max-w-xl flex justify-around items-start gap-2">
+              <label className="font-bold">{t.weight}: </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="enWeight"
+                  value="default"
+                  checked={states.enWeight === 'default'}
+                  onChange={() => actions.setEnWeight('default')}
+                />
+                {t.weightDefault}
+              </label>
+              <label className="flex items-center gap-2 font-bold">
+                <input
+                  type="radio"
+                  name="enWeight"
+                  value="bold"
+                  checked={states.enWeight === 'bold'}
+                  onChange={() => actions.setEnWeight('bold')}
+                />
+                {t.weightBold}
+              </label>
+            </div>
+          </>
+        )}
 
         <button
           className="w-full max-w-xl bg-blue-500 text-white px-4 py-2 rounded-lg cursor-pointer"
@@ -134,27 +207,11 @@ const InputScreen = props => {
         </button>
 
         <div className="w-full max-w-xl flex flex-col justify-center items-start px-6">
-          <span className="block text-base text-gray-500">
-            ● 文字列は1行20文字、4行まで入力できます
-          </span>
-          <span className="block text-base text-gray-500">
-            ● 文字色、背景色、表示方法を選んでSTARTを押してください
-          </span>
-          <span className="block text-base text-gray-500">
-            ● 文字列は10件まで保存でき、「メモ」から選べます
-          </span>
-          <span className="block text-base text-gray-500">
-            ●
-            文字列表示中に画面をタップし、右上のCANCELボタンを押すとこの画面に戻ります
-          </span>
-          <span className="block text-base text-gray-500">
-            ●
-            全文表示のフォントサイズと横スクロールのスピードは+/-ボタンで調整できます
-          </span>
-          <span className="block text-base text-gray-500">
-            ●
-            スマホ・タブレットで全画面表示にするには、ホーム画面にアイコンを追加してそこから起動してください
-          </span>
+          {t.help.map(line => (
+            <span key={line} className="block text-base text-gray-500">
+              ● {line}
+            </span>
+          ))}
         </div>
 
         <div className="w-full max-w-xl text-right text-sm text-gray-500 mt-4">
@@ -176,6 +233,7 @@ const InputScreen = props => {
           setShowNotes={setShowNotes}
           setText={actions.setText}
           deleteNote={deleteNote}
+          t={t}
         />
       )}
     </>
