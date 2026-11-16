@@ -70,7 +70,7 @@ function App() {
     let length = 0;
 
     for (const char of text) {
-      if (char.match(/[^\x00-\x7F]/)) {
+      if (char.codePointAt(0) > 0x7f) {
         length += 2;
       } else {
         length += 1;
